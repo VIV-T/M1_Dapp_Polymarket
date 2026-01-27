@@ -5,7 +5,7 @@ module.exports = async function (deployer) {
   try {
     const umaMock = await UMAOptimisticOracleMock.deployed();
     const eventDescription = "PSG vs OM, who wins?";
-    const disputePeriod = 86400; // 1 jour en secondes
+    const disputePeriod = 86400; // 1 day in seconds
 
     await deployer.deploy(
       PredictionMarket,
@@ -17,6 +17,6 @@ module.exports = async function (deployer) {
     const predictionMarket = await PredictionMarket.deployed();
     console.log("PredictionMarket deployed at:", predictionMarket.address);
   } catch (error) {
-    console.error("Erreur lors du déploiement de PredictionMarket :", error);
+    console.error("Error deploying PredictionMarket:", error);
   }
 };

@@ -10,7 +10,7 @@ export default function MarketCard({ market, refresh, account }) {
     return () => clearInterval(timer);
   }, []);
 
-  // Formate les secondes en HH:MM:SS
+  // Format seconds to HH:MM:SS
   const formatTime = (seconds) => {
     if (seconds <= 0) return "00:00:00";
     const h = Math.floor(seconds / 3600);
@@ -40,10 +40,10 @@ export default function MarketCard({ market, refresh, account }) {
   const colorB = "#ec4899"; 
 
   const handleBetAction = async (choice) => {
-    if (!account) return alert("Veuillez connecter MetaMask.");
+    if (!account) return alert("Please connect MetaMask.");
     try {
       const { predictionMarket, web3 } = await initWeb3();
-      const amount = prompt("Montant à parier (ETH) :");
+      const amount = prompt("Amount to bet (ETH):");
       if (!amount) return;
       await predictionMarket.methods.placeBet(market.id, choice).send({
         from: account,
@@ -66,14 +66,14 @@ export default function MarketCard({ market, refresh, account }) {
       const { predictionMarket } = await initWeb3();
       await predictionMarket.methods.claimGain(market.id).send({ from: account });
       refresh();
-    } catch (e) { alert("Erreur lors du claim"); }
+    } catch (e) { alert("Error while claiming"); }
   };
 
   return (
     <div className={`market-card ${isExpired && !isResolved ? "border-pending" : ""}`}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px', fontWeight: 'bold' }}>
         <span style={{ color: isResolved ? '#4ade80' : isExpired ? '#f59e0b' : '#60a5fa' }}>
-          {isResolved ? "● Terminé" : isExpired ? "● En attente Oracle" : "● En cours"}
+          {isResolved ? "● Finished" : isExpired ? "● Pending Oracle" : "● Live"}
         </span>
         {!isResolved && !isExpired && (
           <span className="timer-text" style={{ color: timeLeft < 300 ? '#ef4444' : '#ccc' }}>
@@ -98,17 +98,17 @@ export default function MarketCard({ market, refresh, account }) {
         {!isExpired && !isResolved && (
           <div style={{ display: 'flex', gap: '12px' }}>
             <button className="btn-bet" style={{ backgroundColor: colorA }} onClick={() => handleBetAction(0)} disabled={hasStaked && userChoice !== 0}>
-              Parier {market.optionA}
+              Bet {market.optionA}
             </button>
             <button className="btn-bet" style={{ backgroundColor: colorB }} onClick={() => handleBetAction(1)} disabled={hasStaked && userChoice !== 1}>
-              Parier {market.optionB}
+              Bet {market.optionB}
             </button>
           </div>
         )}
 
         {isExpired && !isResolved && (
           <div className="oracle-box">
-            <p style={{ textAlign: 'center', fontSize: '10px', color: '#f59e0b', fontWeight: 'bold' }}>⚖️ RÉSOLUTION ORACLE</p>
+            <p style={{ textAlign: 'center', fontSize: '10px', color: '#f59e0b', fontWeight: 'bold' }}>⚖️ ORACLE RESOLUTION</p>
             <div style={{ display: 'flex', gap: '8px' }}>
               <button className="btn-resolve" style={{ backgroundColor: '#2563eb', flex: 1 }} onClick={() => handleResolve(0)}>{market.optionA}</button>
               <button className="btn-resolve" style={{ backgroundColor: '#db2777', flex: 1 }} onClick={() => handleResolve(1)}>{market.optionB}</button>
@@ -118,13 +118,13 @@ export default function MarketCard({ market, refresh, account }) {
 
         {isResolved && (
           <div className="resolved-banner" style={{ borderColor: winningOutcome === 0 ? colorA : colorB }}>
-            <div style={{ color: '#ccc', fontSize: '12px' }}>VAINQUEUR</div>
+            <div style={{ color: '#ccc', fontSize: '12px' }}>WINNER</div>
             <div style={{ fontSize: '1.5rem', fontWeight: '900', color: 'white' }}>
               {winningOutcome === 0 ? market.optionA : market.optionB}
             </div>
             {isWinner && (
               <button className="btn-primary" style={{ marginTop: '10px', width: '100%', backgroundColor: '#fbbf24', color: 'black' }} onClick={handleClaim}>
-                RÉCUPÉRER MES GAINS
+                CLAIM MY REWARDS
               </button>
             )}
           </div>

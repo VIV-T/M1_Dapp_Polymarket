@@ -27,8 +27,8 @@ export default function CreateMarketModal({ onClose, onRefresh }) {
       onRefresh();
       onClose();
     } catch (error) {
-      console.error("Erreur :", error);
-      alert("La transaction a échoué.");
+      console.error("Error:", error);
+      alert("The transaction failed.");
     }
   };
 
@@ -48,14 +48,14 @@ export default function CreateMarketModal({ onClose, onRefresh }) {
   return (
     <div className="modal-overlay" style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.8)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, backdropFilter: 'blur(4px)' }}>
       <div className="modal-content" style={{ backgroundColor: '#1a1a1a', padding: '30px', borderRadius: '16px', width: '450px', border: '1px solid #333' }}>
-        <h2 style={{ color: 'white', marginBottom: '20px', fontSize: '1.5rem' }}>🚀 Nouveau Marché</h2>
+        <h2 style={{ color: 'white', marginBottom: '20px', fontSize: '1.5rem' }}>🚀 New Market</h2>
         
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
           <div>
             <label style={labelStyle}>QUESTION</label>
             <input
               style={inputStyle}
-              placeholder="ex: Bitcoin atteindra-t-il 100k$ ?"
+              placeholder="e.g.: Will Bitcoin hit $100k?"
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               required
             />
@@ -66,7 +66,7 @@ export default function CreateMarketModal({ onClose, onRefresh }) {
               <label style={{ ...labelStyle, color: '#3b82f6' }}>OPTION A</label>
               <input
                 style={inputStyle}
-                placeholder="ex: OUI"
+                placeholder="e.g.: YES"
                 onChange={(e) => setFormData({ ...formData, optionA: e.target.value })}
                 required
               />
@@ -75,7 +75,7 @@ export default function CreateMarketModal({ onClose, onRefresh }) {
               <label style={{ ...labelStyle, color: '#ec4899' }}>OPTION B</label>
               <input
                 style={inputStyle}
-                placeholder="ex: NON"
+                placeholder="e.g.: NO"
                 onChange={(e) => setFormData({ ...formData, optionB: e.target.value })}
                 required
               />
@@ -83,7 +83,7 @@ export default function CreateMarketModal({ onClose, onRefresh }) {
           </div>
 
           <div>
-            <label style={labelStyle}>DURÉE (SECONDES)</label>
+            <label style={labelStyle}>DURATION (SECONDS)</label>
             <input
               type="number"
               style={inputStyle}
@@ -95,10 +95,10 @@ export default function CreateMarketModal({ onClose, onRefresh }) {
 
           <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
             <button type="button" className="btn-secondary" style={{ flex: 1, padding: '12px', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: 'white', border: '1px solid #444' }} onClick={onClose}>
-              Annuler
+              Cancel
             </button>
             <button type="submit" className="btn-primary" style={{ flex: 1, padding: '12px', borderRadius: '8px', cursor: 'pointer', background: '#3b82f6', color: 'white', border: 'none', fontWeight: 'bold' }}>
-              Déployer
+              Deploy
             </button>
           </div>
         </form>

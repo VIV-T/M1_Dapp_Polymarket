@@ -19,7 +19,7 @@ contract PredictionMarket {
 
     struct Bet {
         uint256 amount;
-        uint8 choice; // 0 ou 1
+        uint8 choice; // 0 or 1
         bool exists;
     }
 
@@ -33,7 +33,7 @@ contract PredictionMarket {
         string memory _opB, 
         uint256 _durationSeconds
     ) external {
-        require(_durationSeconds > 0, "Duree invalide");
+        require(_durationSeconds > 0, "Invalid duration");
         
         markets.push(Market({
             id: nextMarketId,
@@ -52,18 +52,18 @@ contract PredictionMarket {
 
     function placeBet(uint256 _marketId, uint8 _choice) external payable {
         Market storage m = markets[_marketId];
-        require(block.timestamp < m.endTime, "Pari termine");
-        require(msg.value > 0, "Montant insuffisant");
-        require(_choice == 0 || _choice == 1, "Choix invalide");
+        require(block.timestamp < m.endTime, "Betting period ended");
+        require(msg.value > 0, "Insufficient amount");
+        require(_choice == 0 || _choice == 1, "Invalid choice");
 
         Bet storage userBet = userBets[_marketId][msg.sender];
 
-        // LOGIQUE DE RESTRICTION
+        // RESTRICTION LOGIC
         if (userBet.amount > 0) {
-            // Si l'utilisateur a deja mise, il DOIT choisir la meme option
-            require(userBet.choice == _choice, "Vous avez deja parie sur l'autre option");
+            // If the user already bet, they MUST choose the same option
+            require(userBet.choice == _choice, "You already bet on the other option");
         } else {
-            // Premier pari : on enregistre son choix
+            // First bet: store their choice
             userBet.choice = _choice;
         }
 
@@ -75,7 +75,7 @@ contract PredictionMarket {
 
     function resolveMarket(uint256 _marketId, uint8 _outcome) external {
         Market storage m = markets[_marketId];
-        require(block.timestamp >= m.endTime, "Evenement non termine");
+        require(block.timestamp >= m.endTime, "Event not finished");
         m.winningOutcome = _outcome;
         m.stage = Stage.Resolved;
     }
@@ -84,25 +84,25 @@ contract PredictionMarket {
         return markets;
     }
 
-    // --- NOUVELLE FONCTION DE RETRAIT ---
+    // --- NEW WITHDRAW FUNCTION ---
     function claimGain(uint256 _marketId) external {
         Market storage m = markets[_marketId];
         
-        require(m.stage == Stage.Resolved, "Marche non resolu");
+        require(m.stage == Stage.Resolved, "Market not resolved");
         
         Bet storage userBet = userBets[_marketId][msg.sender];
-        require(userBet.amount > 0, "Aucun pari trouve");
-        require(userBet.choice == m.winningOutcome, "Vous n'avez pas gagne");
+        require(userBet.amount > 0, "No bet found");
+        require(userBet.choice == m.winningOutcome, "You did not win");
 
         uint256 winningPool = (m.winningOutcome == 0) ? m.poolA : m.poolB;
-        require(winningPool > 0, "Aucune mise sur le gagnant");
+        require(winningPool > 0, "No bets on the winner");
         uint256 losingPool = (m.winningOutcome == 0) ? m.poolB : m.poolA;
 
-        // Formule Polymarket : Mise + Part proportionnelle du pool perdant
-        // Gain = MiseUser + (MiseUser / TotalMisesGagnantes) * TotalMisesPerdantes
+        // Polymarket formula: Stake + proportional share of the losing pool
+        // Reward = UserStake + (UserStake / TotalWinningStakes) * TotalLosingStakes
         uint256 reward = userBet.amount + (userBet.amount * losingPool / winningPool);
 
-        userBet.amount = 0; // Sécurité anti-réentrance : on vide avant d'envoyer
+        userBet.amount = 0; // Reentrancy safety: clear before sending
         
         payable(msg.sender).transfer(reward);
     }

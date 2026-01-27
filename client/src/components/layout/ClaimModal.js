@@ -7,7 +7,7 @@ export default function ClaimModal({ onClose, onClaim }) {
   function handleClaim() {
     setLoading(true)
 
-    // 🔥 stub – sau này gọi smart contract ở đây
+    // stub - will call the smart contract here later
     setTimeout(() => {
       onClaim(amount)
       setLoading(false)

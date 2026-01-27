@@ -10,7 +10,7 @@ export default function Panel({ view, account }) {
 
   const loadBlockchainData = useCallback(async () => {
     try {
-      // ÉTAPE 1 : Initialisation UNIQUE du contrat avant la boucle
+      // STEP 1: Single initialization of the contract before the loop
       const { predictionMarket } = await initWeb3();
       
       const marketCount = await predictionMarket.methods.nextMarketId().call();
@@ -18,9 +18,9 @@ export default function Panel({ view, account }) {
       
       const loadedMarkets = [];
 
-      // ÉTAPE 2 : Boucle de récupération des données
+      // STEP 2: Loop to fetch data
       for (let i = 0; i < marketCount; i++) {
-        // On utilise la même instance 'predictionMarket' pour chaque appel
+        // Use the same 'predictionMarket' instance for each call
         const m = await predictionMarket.methods.markets(i).call();
         
         let userStake = "0";
@@ -28,12 +28,12 @@ export default function Panel({ view, account }) {
 
         if (account) {
           try {
-            // Appel direct sans réinitialiser Web3
+            // Direct call without reinitializing Web3
             const bet = await predictionMarket.methods.userBets(i, account).call();
             userStake = bet.amount.toString();
             userStakeChoice = bet.choice;
           } catch (e) {
-            console.error(`Erreur chargement pari marché ${i}:`, e);
+            console.error(`Error loading market bet ${i}:`, e);
           }
         }
 
@@ -41,7 +41,7 @@ export default function Panel({ view, account }) {
         const isResolved = parseInt(m.stage) === 2;
         const isExpired = now >= endTime;
 
-        // FILTRAGE
+        // FILTERING
         let shouldShow = false;
         if (status === "active") {
           shouldShow = !isExpired && !isResolved;
@@ -58,7 +58,7 @@ export default function Panel({ view, account }) {
         if (shouldShow) {
           loadedMarkets.push({ 
             ...m, 
-            id: i, // Index unique pour le claimGain
+            id: i, // Unique index for claim
             userStake, 
             userStakeChoice: userStake !== "0" ? parseInt(userStakeChoice) : null 
           });
@@ -67,7 +67,7 @@ export default function Panel({ view, account }) {
       
       setMarkets(loadedMarkets.reverse());
     } catch (error) {
-      console.error("Erreur Panel:", error);
+      console.error("Panel error:", error);
     } finally {
       setLoading(false);
     }
@@ -77,17 +77,17 @@ export default function Panel({ view, account }) {
     setLoading(true);
     loadBlockchainData();
     
-    // Intervalle de sécurité pour rafraîchir les données
+    // Safety interval to refresh data
     const interval = setInterval(loadBlockchainData, 20000); 
     return () => clearInterval(interval);
   }, [loadBlockchainData, account]);
 
-  if (loading) return <div className="loader" style={{ textAlign: 'center', color: 'white', marginTop: '50px' }}>Chargement des marchés...</div>;
+  if (loading) return <div className="loader" style={{ textAlign: 'center', color: 'white', marginTop: '50px' }}>Loading markets...</div>;
 
   return (
     <div className="panel-container">
       <h2 className="panel-title" style={{ color: 'white', marginBottom: '20px' }}>
-        {view === "PERSONAL" ? "Mes Paris" : "Marchés"} 
+        {view === "PERSONAL" ? "My Bets" : "Markets"} 
         <span style={{ fontSize: '0.6em', marginLeft: '10px', opacity: 0.6 }}>
           {status ? `(${status.toUpperCase()})` : ""}
         </span>
@@ -95,7 +95,7 @@ export default function Panel({ view, account }) {
       
       {markets.length === 0 ? (
         <div className="empty-state" style={{ textAlign: 'center', padding: '40px', color: '#666', background: '#1e1e1e', borderRadius: '12px' }}>
-          Aucun pari trouvé ici.
+          No bets found here.
         </div>
       ) : (
         <div className="panel-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>

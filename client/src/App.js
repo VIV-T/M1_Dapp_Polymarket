@@ -9,7 +9,7 @@ import "./App.css";
 export default function App() {
   const [account, setAccount] = useState(null);
 
-  // 1. AUTO-LOGIN : Vérifie si MetaMask est déjà connecté au chargement
+  // 1. AUTO-LOGIN: check if MetaMask is already connected on load
   useEffect(() => {
     const checkConnection = async () => {
       if (window.ethereum) {
@@ -21,7 +21,7 @@ export default function App() {
     };
     checkConnection();
 
-    // Écouter le changement de compte sur MetaMask
+    // Listen for account changes in MetaMask
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', (accounts) => {
         setAccount(accounts[0] || null);
@@ -32,11 +32,11 @@ export default function App() {
   return (
     <Router>
       <div className="app-layout">
-        {/* ON PASSE l'état account ici pour que la Sidebar sache si on est loggé */}
+        {/* pass account state so the Sidebar knows if user is connected */}
         <Sidebar isConnected={!!account} /> 
         
         <div className="main-content">
-          {/* ON PASSE account et setAccount ici pour que le Header puisse connecter l'utilisateur */}
+          {/* pass account and setAccount so Header can connect the user */}
           <Header account={account} setAccount={setAccount} />
           
           <div className="content-wrapper">

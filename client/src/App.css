@@ -20,7 +20,7 @@ body {
   font-family: 'Inter', -apple-system, sans-serif;
 }
 
-/* --- STRUCTURE DE L'APP --- */
+/* --- APP STRUCTURE --- */
 .app-layout {
   display: flex;
   min-height: 100vh;
@@ -124,7 +124,7 @@ body {
   font-weight: bold;
 }
 
-/* --- GRILLE ET CARTES --- */
+/* --- GRID & CARDS --- */
 .panel-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -157,7 +157,7 @@ body {
   font-weight: 700;
 }
 
-/* Barre de progression */
+/* Progress bar */
 .progress-container {
   height: 12px;
   background: #333;
@@ -172,7 +172,7 @@ body {
   transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Boutons */
+/* Buttons */
 .btn-bet {
   flex: 1;
   padding: 12px;
@@ -190,7 +190,7 @@ body {
   opacity: 0.5;
 }
 
-/* Bannière de Résultat */
+/* Result banner */
 .resolved-banner {
   padding: 16px;
   border-radius: 12px;
@@ -224,7 +224,7 @@ body {
   border-left: 4px solid;
 }
 
-/* Effets pour les boutons de la modale et des cards */
+/* Button hover effects for modal and cards */
 .btn-primary:hover, .btn-bet:hover {
   filter: brightness(1.2);
   box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
@@ -236,7 +236,7 @@ body {
   border-color: #666;
 }
 
-/* Animation d'apparition de la modale */
+/* Modal appearance animation */
 .modal-content {
   animation: modalFadeIn 0.3s ease-out;
 }
@@ -246,15 +246,15 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Style pour le texte du timer */
+/* Timer text style */
 .timer-text {
-  font-family: 'Courier New', Courier, monospace; /* Police monospace pour éviter que le texte bouge */
+  font-family: 'Courier New', Courier, monospace; /* Monospace font to avoid shifting text */
   background: rgba(0, 0, 0, 0.2);
   padding: 2px 8px;
   border-radius: 4px;
 }
 
-/* --- BOUTONS & ACTIONS --- */
+/* --- ACTIONS & BUTTONS --- */
 .btn-bet, .btn-primary {
   background: var(--primary-blue);
   color: white;
@@ -285,7 +285,7 @@ body {
   color: var(--bg-dark);
 }
 
-/* --- BOUTON FLOTTANT (FAB) --- */
+/* --- FLOATING ACTION BUTTON (FAB) --- */
 .fab-container {
   position: fixed;
   bottom: 30px;
@@ -314,7 +314,7 @@ body {
   background: var(--primary-hover);
 }
 
-/* --- MODALES --- */
+/* --- MODALS --- */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -345,7 +345,7 @@ body {
   box-sizing: border-box;
 }
 
-/* Sidebar Link désactivé */
+/* Disabled sidebar link */
 .sidebar-link-disabled {
   padding: 12px 20px;
   color: var(--text-muted);
@@ -354,7 +354,7 @@ body {
   opacity: 0.6;
 }
 
-/* Bouton de pari désactivé */
+/* Disabled bet button */
 .btn-disabled {
   background: var(--border-color) !important;
   color: var(--text-muted) !important;
@@ -362,13 +362,13 @@ body {
   pointer-events: none;
 }
 
-/* FAB Verrouillé */
+/* Locked FAB */
 .fab-locked {
   background: var(--border-color) !important;
   font-size: 20px !important;
 }
 
-/* Animation discrète pour le profil quand on se connecte */
+/* Subtle profile animation when connecting */
 .sidebar-link.active {
   animation: slideIn 0.3s ease-out;
 }
@@ -381,7 +381,7 @@ body {
 .status-dot {
   width: 10px;
   height: 10px;
-  background: #10b981; /* Vert */
+  background: #10b981; /* Green */
   border-radius: 50%;
   box-shadow: 0 0 8px #10b981;
 }

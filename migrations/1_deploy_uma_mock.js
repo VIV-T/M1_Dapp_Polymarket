@@ -6,6 +6,6 @@ module.exports = async function (deployer) {
     const umaMock = await UMAOptimisticOracleMock.deployed();
     console.log("UMAOptimisticOracleMock deployed at:", umaMock.address);
   } catch (error) {
-    console.error("Erreur lors du déploiement de UMAOptimisticOracleMock :", error);
+    console.error("Error deploying UMAOptimisticOracleMock:", error);
   }
 };

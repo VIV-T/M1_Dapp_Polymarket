@@ -12,26 +12,26 @@ export default function Sidebar({ isConnected }) {
         <div className="sidebar-title">Menu</div>
         <nav className="sidebar-nav">
           <Link to="/global/active" className={`sidebar-link ${location.pathname.includes('/global') ? 'active' : ''}`}>
-            🌐 Vue Globale
+            🌐 Global View
           </Link>
 
           {isConnected ? (
             <Link to="/personal/active" className={`sidebar-link ${location.pathname.includes('/personal') ? 'active' : ''}`}>
-              👤 Mon Profil
+              👤 My Profile
             </Link>
           ) : (
             <div className="sidebar-link-disabled">
-              🔒 Profil (Connectez-vous)
+              🔒 Profile (Please connect)
             </div>
           )}
         </nav>
       </div>
 
-      {/* FAB Bouton - Uniquement si connecté */}
+      {/* FAB Button - only when connected */}
       <div className="fab-container">
         <button 
           className={`btn-create-fab ${!isConnected ? 'fab-locked' : ''}`}
-          onClick={() => isConnected ? setShowModal(true) : alert("Connectez MetaMask pour créer un Bet")}
+          onClick={() => isConnected ? setShowModal(true) : alert("Connect MetaMask to create a Bet")}
         >
           {isConnected ? "+" : "🔒"}
         </button>
