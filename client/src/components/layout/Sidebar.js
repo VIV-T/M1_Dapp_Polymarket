@@ -6,8 +6,8 @@ export default function Sidebar({ isConnected, account }) {
   const [showModal, setShowModal] = useState(false);
   const location = useLocation();
 
-  // OPTIONNEL : Si vous voulez cacher le menu Admin aux autres utilisateurs, 
-  // remplacez par : const isOracle = account?.toLowerCase() === "votre_adresse_oracle".toLowerCase();
+  // OPTIONAL: To hide admin menu for non-oracle users, replace with a check like:
+  // const isOracle = account?.toLowerCase() === "your_oracle_address".toLowerCase();
   const isOracle = isConnected; 
 
   return (
@@ -19,7 +19,7 @@ export default function Sidebar({ isConnected, account }) {
             to="/global/active" 
             className={`sidebar-link ${location.pathname.includes('/global') ? 'active' : ''}`}
           >
-            🌐 Vue Globale
+            🌐 Global View
           </Link>
 
           {isConnected ? (
@@ -28,35 +28,35 @@ export default function Sidebar({ isConnected, account }) {
                 to="/personal/active" 
                 className={`sidebar-link ${location.pathname.includes('/personal') ? 'active' : ''}`}
               >
-                👤 Mon Profil
+                👤 My Profile
               </Link>
 
-              {/* SECTION ADMINISTRATION ORACLE */}
+              {/* ADMIN SECTION */}
               <div style={{ margin: '20px 0 10px 15px', fontSize: '10px', color: '#666', fontWeight: 'bold', letterSpacing: '1px' }}>
                 ADMINISTRATION
               </div>
               <Link 
                 to="/admin/oracle" 
                 className={`sidebar-link ${location.pathname.includes('/admin/oracle') ? 'active' : ''}`}
-                style={{ color: '#4ade80' }} // Couleur distincte pour l'admin
+                style={{ color: '#4ade80' }} // Distinct color for admin
               >
-                ⚖️ Validation Oracle
+                ⚖️ Oracle Validation
               </Link>
             </>
           ) : (
             <div className="sidebar-link-disabled">
-              🔒 Profil (Connectez-vous)
+              🔒 Profile (Please connect)
             </div>
           )}
         </nav>
       </div>
 
-      {/* FAB Bouton - Création de Marché */}
+      {/* FAB Button - Create Market */}
       <div className="fab-container">
         <button 
           className={`btn-create-fab ${!isConnected ? 'fab-locked' : ''}`}
-          onClick={() => isConnected ? setShowModal(true) : alert("Connectez MetaMask pour créer un Bet")}
-          title="Créer un nouveau marché"
+          onClick={() => isConnected ? setShowModal(true) : alert("Connect MetaMask to create a Bet")}
+          title="Create a new market"
         >
           {isConnected ? "+" : "🔒"}
         </button>

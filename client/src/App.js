@@ -4,13 +4,13 @@ import Header from "./components/layout/Header";
 import Sidebar from "./components/layout/Sidebar";
 import MarketTabs from "./components/market/MarketTabs";
 import Panel from "./components/market/Panel";
-import OracleAdmin from "./components/market/OracleAdmin"; // Import de la page d'administration
+import OracleAdmin from "./components/market/OracleAdmin"; // Admin page import
 import "./App.css";
 
 export default function App() {
   const [account, setAccount] = useState(null);
 
-  // 1. AUTO-LOGIN : Vérifie si MetaMask est déjà connecté au chargement
+  // 1. AUTO-LOGIN: check if MetaMask is already connected on load
   useEffect(() => {
     const checkConnection = async () => {
       if (window.ethereum) {
@@ -20,20 +20,20 @@ export default function App() {
             setAccount(accounts[0]);
           }
         } catch (error) {
-          console.error("Erreur lors de la vérification de la connexion:", error);
+          console.error("Error checking connection:", error);
         }
       }
     };
     checkConnection();
 
-    // Écouter le changement de compte ou de réseau sur MetaMask
+    // Listen for account or network changes in MetaMask
     if (window.ethereum) {
       window.ethereum.on('accountsChanged', (accounts) => {
         setAccount(accounts[0] || null);
       });
       
       window.ethereum.on('chainChanged', () => {
-        window.location.reload(); // Recharger la page en cas de changement de réseau
+        window.location.reload(); // Reload page on network change
       });
     }
 
@@ -47,29 +47,29 @@ export default function App() {
   return (
     <Router>
       <div className="app-layout">
-        {/* On passe l'état account pour gérer l'affichage des liens dans la Sidebar */}
+        {/* pass account state to control Sidebar links */}
         <Sidebar isConnected={!!account} account={account} /> 
         
         <div className="main-content">
-          {/* Le Header gère la connexion/déconnexion */}
+          {/* Header handles connect/diconnect */}
           <Header account={account} setAccount={setAccount} />
           
           <div className="content-wrapper">
-            {/* Les onglets de navigation (Active / Pending / Resolved) */}
+            {/* Navigation tabs (Active / Pending / Resolved) */}
             <MarketTabs />
             
             <Routes>
-              {/* Vues publiques et personnelles */}
+              {/* Public and personal views */}
               <Route path="/global/:status" element={<Panel view="GLOBAL" account={account} />} />
               <Route path="/personal/:status" element={<Panel view="PERSONAL" account={account} />} />
               
-              {/* PAGE ADMIN ORACLE : Pour valider les résultats avec signature */}
+              {/* ADMIN ORACLE PAGE: validate results with signature */}
               <Route path="/admin/oracle" element={<OracleAdmin account={account} />} />
 
-              {/* Redirection par défaut vers les marchés actifs */}
+              {/* Default redirect to active markets */}
               <Route path="/" element={<Navigate to="/global/active" replace />} />
               
-              {/* Catch-all pour éviter les routes cassées */}
+              {/* Catch-all to avoid broken routes */}
               <Route path="*" element={<Navigate to="/global/active" replace />} />
             </Routes>
           </div>

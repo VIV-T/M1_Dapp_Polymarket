@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 export default function MarketTabs() {
   const location = useLocation();
   
-  // On détecte si on est dans la vue Global ou Personal
+  // Detect whether we're in the Global or Personal view
   const viewPrefix = location.pathname.includes('/personal') ? '/personal' : '/global';
 
   const tabs = [

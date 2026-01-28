@@ -10,30 +10,30 @@ export default function Panel({ view, account }) {
 
   const loadBlockchainData = useCallback(async () => {
     try {
-      // ÉTAPE 1 : Initialisation du contrat
+      // STEP 1: initialize contract instance
       const { predictionMarket } = await initWeb3();
       
-      // On récupère le nombre total de marchés créés
+      // Get total number of markets
       const marketCount = await predictionMarket.methods.nextMarketId().call();
       const now = Math.floor(Date.now() / 1000);
       
       const loadedMarkets = [];
 
-      // ÉTAPE 2 : Boucle de récupération des données pour chaque marché
+      // STEP 2: fetch data for each market
       for (let i = 0; i < marketCount; i++) {
         const m = await predictionMarket.methods.markets(i).call();
         
         let userStake = "0";
         let userStakeChoice = null;
 
-        // Si l'utilisateur est connecté, on récupère son pari spécifique
+        // If user connected, fetch their specific bet
         if (account) {
           try {
             const bet = await predictionMarket.methods.userBets(i, account).call();
             userStake = bet.amount.toString();
             userStakeChoice = bet.choice;
           } catch (e) {
-            console.error(`Erreur chargement pari marché ${i}:`, e);
+            console.error(`Error loading market bet ${i}:`, e);
           }
         }
 
@@ -42,24 +42,24 @@ export default function Panel({ view, account }) {
         const isResolved = stage === 2;
         const isExpired = now >= endTime;
 
-        // LOGIQUE DE FILTRAGE
+        // FILTERING LOGIC
         let shouldShow = false;
 
         if (status === "active") {
-          // Un marché est actif s'il n'est ni expiré ni résolu
+          // Active: not expired and not resolved
           shouldShow = !isExpired && stage !== 2;
         } else if (status === "pending") {
-          // Un marché est en attente si le temps est écoulé mais que l'oracle n'a pas signé
+          // Pending: expired but not resolved
           shouldShow = isExpired && stage !== 2;
         } else if (status === "resolved") {
-          // Le marché est résolu (victoire confirmée par signature)
+          // Resolved markets
           shouldShow = isResolved;
         } else if (!status) {
-          // Vue globale (tous les marchés)
+          // No status filter: show all
           shouldShow = true;
         }
 
-        // Filtre supplémentaire pour la vue "Mes Paris"
+        // Additional filter for PERSONAL view: only show markets where user staked
         if (view === "PERSONAL" && (userStake === "0" || !userStake)) {
           shouldShow = false;
         }
@@ -67,17 +67,17 @@ export default function Panel({ view, account }) {
         if (shouldShow) {
           loadedMarkets.push({ 
             ...m, 
-            id: i, // ID crucial pour la signature et le claim
+            id: i, // id used for actions like claim
             userStake, 
             userStakeChoice: userStake !== "0" ? parseInt(userStakeChoice) : null 
           });
         }
       }
       
-      // On inverse l'ordre pour voir les plus récents en premier
+      // Show newest first
       setMarkets(loadedMarkets.reverse());
     } catch (error) {
-      console.error("Erreur Panel lors de la récupération des données:", error);
+      console.error("Panel error while fetching data:", error);
     } finally {
       setLoading(false);
     }
@@ -87,7 +87,7 @@ export default function Panel({ view, account }) {
     setLoading(true);
     loadBlockchainData();
     
-    // Rafraîchissement automatique toutes les 20 secondes
+    // Auto-refresh every 20 seconds
     const interval = setInterval(loadBlockchainData, 20000); 
     return () => clearInterval(interval);
   }, [loadBlockchainData, account]);
@@ -95,7 +95,7 @@ export default function Panel({ view, account }) {
   if (loading) {
     return (
       <div className="loader" style={{ textAlign: 'center', color: 'white', marginTop: '50px' }}>
-        Chargement des marchés...
+        Loading markets...
       </div>
     );
   }
@@ -103,7 +103,7 @@ export default function Panel({ view, account }) {
   return (
     <div className="panel-container">
       <h2 className="panel-title" style={{ color: 'white', marginBottom: '20px' }}>
-        {view === "PERSONAL" ? "Mes Paris" : "Marchés"} 
+        {view === "PERSONAL" ? "My Bets" : "Markets"} 
         <span style={{ fontSize: '0.6em', marginLeft: '10px', opacity: 0.6 }}>
           {status ? `(${status.toUpperCase()})` : ""}
         </span>
@@ -118,7 +118,7 @@ export default function Panel({ view, account }) {
           borderRadius: '12px',
           border: '1px dashed #333'
         }}>
-          Aucun marché trouvé dans cette catégorie.
+          No markets found in this category.
         </div>
       ) : (
         <div className="panel-grid" style={{ 

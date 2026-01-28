@@ -2,22 +2,22 @@ const PredictionMarket = artifacts.require("PredictionMarket");
 
 module.exports = async function (deployer, network, accounts) {
   try {
-    // L'adresse qui aura le droit de signer les résultats (votre Oracle)
-    // On prend le premier compte fourni par Truffle pour les tests locaux
+    // The address that will be allowed to sign results (your Oracle)
+    // We take the first Truffle-provided account for local tests
     const oracleAddress = accounts[0]; 
 
-    console.log("Déploiement avec l'adresse Oracle :", oracleAddress);
+    console.log("Deploying with Oracle address:", oracleAddress);
 
-    // On déploie en ne passant QUE l'adresse de l'oracle
+    // Deploy and pass ONLY the oracle address
     await deployer.deploy(
       PredictionMarket,
       oracleAddress
     );
 
     const predictionMarket = await PredictionMarket.deployed();
-    console.log("PredictionMarket déployé à l'adresse :", predictionMarket.address);
+    console.log("PredictionMarket deployed at:", predictionMarket.address);
     
   } catch (error) {
-    console.error("Erreur lors du déploiement de PredictionMarket :", error);
+    console.error("Error deploying PredictionMarket:", error);
   }
 };
